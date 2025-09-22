@@ -1,0 +1,17 @@
+# Node.js (frontend)
+node_modules/
+dist/
+build/
+
+# Python (backend)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+venv/
+.env
+
+# Logs
+*.log
