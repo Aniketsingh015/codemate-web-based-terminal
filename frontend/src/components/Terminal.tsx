@@ -1,16 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CommandOutput, TerminalTab, WebSocketMessage, Theme } from "../types";
-import {
-  Mic,
-  MicOff,
-  Play,
-  Square,
-  ChevronDown,
-  X,
-  Maximize2,
-  GripHorizontal,
-} from "lucide-react";
+import { Play, X, Maximize2 } from "lucide-react";
 
 interface TerminalProps {
   tab: TerminalTab;
@@ -27,21 +18,18 @@ interface TerminalProps {
 export const Terminal: React.FC<TerminalProps> = ({
   tab,
   onUpdateTab,
-  onSendMessage,
+  
   onCloseTab,
   onMinimizeTab,
-  onResizeTab,
-  theme,
+  
+ 
   isMinimized = false,
   customHeight = 400,
 }) => {
   const [input, setInput] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
-  const [resizeStartY, setResizeStartY] = useState(0);
-  const [resizeStartHeight, setResizeStartHeight] = useState(0);
+
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -144,35 +132,6 @@ export const Terminal: React.FC<TerminalProps> = ({
     [tab.id, tab.output, tab.workingDirectory, onUpdateTab]
   );
 
-  // Handle input history navigation
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleCommand(input);
-        setInput("");
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        if (tab.historyIndex > 0) {
-          const newIndex = tab.historyIndex - 1;
-          onUpdateTab(tab.id, { historyIndex: newIndex });
-          setInput(tab.commandHistory[newIndex]);
-        }
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        if (tab.historyIndex < tab.commandHistory.length - 1) {
-          const newIndex = tab.historyIndex + 1;
-          onUpdateTab(tab.id, { historyIndex: newIndex });
-          setInput(tab.commandHistory[newIndex]);
-        } else {
-          onUpdateTab(tab.id, { historyIndex: tab.commandHistory.length });
-          setInput("");
-        }
-      }
-    },
-    [input, tab.historyIndex, tab.commandHistory, tab.id, onUpdateTab, handleCommand]
-  );
-
   // Format terminal output
   const formatOutput = (output: CommandOutput) => {
     const lines = output.content.split("\n");
@@ -252,6 +211,16 @@ export const Terminal: React.FC<TerminalProps> = ({
         </AnimatePresence>
       </div>
 
+      {/* Scroll to bottom button */}
+      {showScrollButton && (
+        <motion.button
+          className="absolute bottom-16 right-4 p-2 rounded-full bg-cyberpunk-primary text-black shadow-lg hover:bg-cyberpunk-accent"
+          onClick={scrollToBottom}
+        >
+          ↓
+        </motion.button>
+      )}
+
       {/* Input area */}
       <div className="p-4 bg-cyberpunk-darker border-t border-cyberpunk-primary/30">
         <div className="flex items-center space-x-2">
@@ -261,7 +230,13 @@ export const Terminal: React.FC<TerminalProps> = ({
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleCommand(input);
+                setInput("");
+              }
+            }}
             className="flex-1 bg-transparent outline-none text-cyberpunk-primary font-mono"
             placeholder="Enter command..."
             disabled={isExecuting}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import  { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Terminal } from "./components/Terminal";
 import { SystemMonitor } from "./components/SystemMonitor";

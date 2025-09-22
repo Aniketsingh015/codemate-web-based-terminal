@@ -13,14 +13,16 @@ export interface SystemStats {
   disk_percent: number;
   disk_used: number;
   disk_total: number;
-  timestamp: string; // since backend returns ISO string
+  timestamp: string; // backend sends ISO string
 }
 
+// src/types/index.ts
 export interface FileEntry {
   name: string;
-  type: 'file' | 'directory';
-  size?: number;
-  modified?: Date;
+  path: string;
+  is_directory: boolean;
+  size: number;
+  modified: string; // ISO string
 }
 
 export interface TerminalTab {

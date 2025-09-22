@@ -3,10 +3,14 @@ import { SystemStats } from '../types';
 
 export const useSystemStats = () => {
   const [systemStats, setSystemStats] = useState<SystemStats>({
-    cpu: 0,
-    memory: 0,
-    disk: 0,
-    timestamp: Date.now()
+    cpu_percent: 0,
+    memory_percent: 0,
+    memory_used: 0,
+    memory_total: 0,
+    disk_percent: 0,
+    disk_used: 0,
+    disk_total: 0,
+    timestamp: new Date().toISOString(),
   });
 
   useEffect(() => {
@@ -14,7 +18,7 @@ export const useSystemStats = () => {
       try {
         const response = await fetch('/api/system-stats');
         if (response.ok) {
-          const stats = await response.json();
+          const stats: SystemStats = await response.json();
           setSystemStats(stats);
         }
       } catch (error) {
