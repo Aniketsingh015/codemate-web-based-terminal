@@ -12,7 +12,7 @@ export const useFileExplorer = () => {
     setError(null);
     
     try {
-      const response = await fetch(`/api/files/${encodeURIComponent(path)}`);
+      const response = await fetch(`https://codemate-web-based-terminal-1.onrender.com/api/files/${encodeURIComponent(path)}`);
       if (response.ok) {
         const data = await response.json();
         setFiles(data.files || []);

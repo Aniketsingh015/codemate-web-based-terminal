@@ -16,7 +16,7 @@ export const useSystemStats = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('/api/system-stats');
+        const response = await fetch('https://codemate-web-based-terminal-1.onrender.com/api/system-stats');
         if (response.ok) {
           const stats: SystemStats = await response.json();
           setSystemStats(stats);

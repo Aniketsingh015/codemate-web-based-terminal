@@ -78,14 +78,14 @@ export const Terminal: React.FC<TerminalProps> = ({
       setIsExecuting(true);
 
       try {
-        const response = await fetch("/execute", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            command,
-            working_directory: tab.workingDirectory,
-          }),
-        });
+        const response = await fetch("https://codemate-web-based-terminal-1.onrender.com/execute", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    command,
+    working_directory: tab.workingDirectory,
+  }),
+});
 
         const result = await response.json();
         const outputMessages: CommandOutput[] = [];
